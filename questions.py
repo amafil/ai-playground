@@ -1,7 +1,7 @@
 import json
 import numpy as np
 from openai import OpenAI
-from functions import generate_embedding_openai
+from functions import generate_embedding
 
 
 def vectorial_answer_search(
@@ -13,7 +13,7 @@ def vectorial_answer_search(
     top_k=3,
     distance_threshold=0.5,
 ):
-    query_embedding = generate_embedding_openai(
+    query_embedding = generate_embedding(
         question=question,
         open_ai_client=open_ai_client,
         model=embedding_model,
