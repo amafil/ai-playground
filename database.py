@@ -1,7 +1,7 @@
 import faiss
 import numpy as np
 from openai import OpenAI
-from functions import generate_embedding_openai
+from functions import generate_embedding
 from knowledge import knowledge
 
 
@@ -16,7 +16,7 @@ def init_index(open_ai_client: OpenAI, embedding_model: str):
     # Store embeddings and metadata
     faq_embeddings = np.array(
         [
-            generate_embedding_openai(
+            generate_embedding(
                 question=q, open_ai_client=open_ai_client, model=embedding_model
             )
             for q, _ in knowledge
