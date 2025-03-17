@@ -2,7 +2,7 @@ import os
 from openai import OpenAI
 from questions import chat_completion, vectorial_answer_search
 from database import init_index
-from message_classificator import classify_message
+from message_classificator import classify_message, extract_keyword
 from functions import (
     get_helpdesk_messages,
 )
@@ -31,6 +31,12 @@ if __name__ == "__main__":
             print("Seeking an answer for:", trimmed_message)
 
             message_classification = classify_message(
+                message=trimmed_message,
+                open_ai_client=chat_client,
+                model=CHAT_COMPLETION_MODEL,
+            )
+
+            message_keyworkds = extract_keyword(
                 message=trimmed_message,
                 open_ai_client=chat_client,
                 model=CHAT_COMPLETION_MODEL,
