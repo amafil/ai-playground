@@ -22,7 +22,7 @@ if __name__ == "__main__":
         print("No new messages found")
         exit()
     else:
-        print(f"Found {messages.count} messages")
+        print(f"Found {len(messages)} messages")
 
     index, knowledge = init_index(chat_client, EMBEDDING_MODEL)
     for message in messages:
