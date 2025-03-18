@@ -1,8 +1,15 @@
+from openai import OpenAI
 import faiss
 import numpy as np
 from openai import OpenAI
-from functions import generate_embedding
-from knowledge import knowledge
+from core.knowledge import knowledge
+
+
+def generate_embedding(question: str, open_ai_client: OpenAI, model: str):
+    response = open_ai_client.embeddings.create(model=model, input=question)
+    embedding = response.data[0].embedding
+
+    return embedding
 
 
 def init_index(open_ai_client: OpenAI, embedding_model: str):

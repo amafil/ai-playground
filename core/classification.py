@@ -1,5 +1,6 @@
 from openai import OpenAI
 import json
+import yake
 
 
 def classify_message(message: str, open_ai_client: OpenAI, model: str) -> dict:
@@ -78,7 +79,7 @@ Example of a correct output:
     return response
 
 
-def extract_keyword(message: str, open_ai_client: OpenAI, model: str) -> dict:
+def extract_keyword_llm(message: str, open_ai_client: OpenAI, model: str) -> dict:
     chat = [
         {
             "role": "system",
@@ -124,3 +125,13 @@ The keyword should be a single word or a short phrase that best represents the m
     print(json.dumps(response, indent=2))
 
     return response
+
+
+def extract_keyword(message: str) -> dict:
+    kw_extractor = yake.KeywordExtractor(lan="it", n=4, dedupLim=0.5, top=5)
+
+    keywords = kw_extractor.extract_keywords(message)
+
+    print(keywords)
+
+    return keywords
