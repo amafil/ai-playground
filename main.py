@@ -1,7 +1,7 @@
 import os
 from typing import List
 from openai import OpenAI
-from models.question_answer import QuestionAnswer
+from models.knowledge import Knowledge
 from services.search import vectorial_answer_search
 from services.chat import chat_completion
 from core.embeddings import init_index
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     knowledge_directory = os.path.join(knowledge_directory, "QA")
 
     # The `knowledge` variable contains all the knowledge about the helpdesk task.
-    knowledge: List[QuestionAnswer] = load_knowledge_from_file(directory_path=knowledge_directory)
+    knowledge: List[Knowledge] = load_knowledge_from_file(directory_path=knowledge_directory)
 
     messages = mock_helpdesk_messages()
 

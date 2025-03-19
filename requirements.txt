@@ -2,3 +2,4 @@ openai
 numpy
 yake
 scikit-learn
+pyodbc

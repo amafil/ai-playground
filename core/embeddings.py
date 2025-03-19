@@ -3,7 +3,7 @@ from openai import OpenAI
 import numpy as np
 from openai import OpenAI
 from sklearn.neighbors import NearestNeighbors
-from models.question_answer import QuestionAnswer
+from models.knowledge import Knowledge
 
 
 def generate_embedding(question: str, open_ai_client: OpenAI, model: str):
@@ -16,7 +16,7 @@ def generate_embedding(question: str, open_ai_client: OpenAI, model: str):
 
 
 def init_index(
-    knowledge: List[QuestionAnswer], open_ai_client: OpenAI, embedding_model: str
+    knowledge: List[Knowledge], open_ai_client: OpenAI, embedding_model: str
 ):
     print("Initializing index...")
 
