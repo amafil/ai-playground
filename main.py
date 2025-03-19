@@ -1,10 +1,12 @@
 import os
+from typing import List
 from openai import OpenAI
+from models.question_answer import QuestionAnswer
 from services.search import vectorial_answer_search
 from services.chat import chat_completion
 from core.embeddings import init_index
 from core.classification import classify_message, extract_keyword, extract_keyword_llm
-from core.knowledge import knowledge
+from core.knowledge import load_knowledge_from_file
 from core.utils import (
     mock_helpdesk_messages,
 )
@@ -16,6 +18,13 @@ if __name__ == "__main__":
     )
     CHAT_COMPLETION_MODEL = "gpt-4o"
     EMBEDDING_MODEL = "text-embedding-all-minilm-l6-v2-embedding"
+
+    # Load knowledge from the external files
+    knowledge_directory = os.path.join(os.path.dirname(__file__), "data")
+    knowledge_directory = os.path.join(knowledge_directory, "QA")
+
+    # The `knowledge` variable contains all the knowledge about the helpdesk task.
+    knowledge: List[QuestionAnswer] = load_knowledge_from_file(directory_path=knowledge_directory)
 
     messages = mock_helpdesk_messages()
 
@@ -65,7 +74,7 @@ if __name__ == "__main__":
             print(answers)
             chat = chat_completion(
                 message=trimmed_message,
-                knowledge=answers,
+                knowledge=answers, #FIXME: this is a List[QuestionAnswer] not a string
                 open_ai_client=chat_client,
                 model=CHAT_COMPLETION_MODEL,
             )

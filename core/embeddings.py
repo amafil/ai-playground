@@ -2,8 +2,8 @@ from typing import List
 from openai import OpenAI
 import numpy as np
 from openai import OpenAI
-from core.knowledge import QuestionAnswer
 from sklearn.neighbors import NearestNeighbors
+from models.question_answer import QuestionAnswer
 
 
 def generate_embedding(question: str, open_ai_client: OpenAI, model: str):
