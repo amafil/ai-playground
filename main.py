@@ -4,13 +4,14 @@ from services.search import vectorial_answer_search
 from services.chat import chat_completion
 from core.embeddings import init_index
 from core.classification import classify_message, extract_keyword, extract_keyword_llm
+from core.knowledge import knowledge
 from core.utils import (
     mock_helpdesk_messages,
 )
 
 if __name__ == "__main__":
     chat_client = OpenAI(
-        base_url=os.getenv("OPENAI_BASE_URL", "http://localhost:1234/v1"),
+        base_url=os.getenv("OPENAI_BASE_URL", "http://192.168.1.101:1234/v1"),
         api_key=os.getenv("OPENAI_API_KEY", "lm-studio"),
     )
     CHAT_COMPLETION_MODEL = "gpt-4o"
@@ -24,7 +25,11 @@ if __name__ == "__main__":
     else:
         print(f"Found {len(messages)} messages")
 
-    index, knowledge = init_index(chat_client, EMBEDDING_MODEL)
+    index, faq_embeddings, faq_answers = init_index(
+        knowledge=knowledge,
+        open_ai_client=chat_client,
+        embedding_model=EMBEDDING_MODEL,
+    )
     for message in messages:
         if message:
             trimmed_message = message.strip()
@@ -47,10 +52,10 @@ if __name__ == "__main__":
 
             answers = vectorial_answer_search(
                 question=trimmed_message,
-                embedding_model=EMBEDDING_MODEL,
-                open_ai_client=chat_client,
                 index=index,
-                knowledge=knowledge,
+                open_ai_client=chat_client,
+                embedding_model=EMBEDDING_MODEL,
+                faq_answers=faq_answers,
             )
 
             if not answers:

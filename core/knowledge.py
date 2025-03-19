@@ -1,21 +1,15 @@
+from typing import List
 import os
 
+from models.question_answer import QuestionAnswer
 
-def load_knowledge(directory_path):
-    knowledge = []
+
+def load_knowledge(directory_path) -> List[QuestionAnswer]:
+    knowledge: List[QuestionAnswer] = []
     for file_name in os.listdir(directory_path):
         file_path = os.path.join(directory_path, file_name)
         if os.path.isfile(file_path):
-            with open(file_path, "r", encoding="utf-8") as file:
-                print(f"Loading knowledge from {file_path}")
-                content = file.read().strip()
-                entries = content.split(
-                    "\n\n"
-                )  # Separate questions and answers by two newlines
-
-                for entry in entries:
-                    question, answer = entries[0], entries[1]
-                    knowledge.append((question.strip(), answer.strip()))
+            knowledge.append(QuestionAnswer.load(file_path))
 
     return knowledge
 

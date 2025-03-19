@@ -1,41 +1,37 @@
+from typing import List
 from openai import OpenAI
-import faiss
 import numpy as np
 from openai import OpenAI
-from core.knowledge import knowledge
+from core.knowledge import QuestionAnswer
+from sklearn.neighbors import NearestNeighbors
 
 
 def generate_embedding(question: str, open_ai_client: OpenAI, model: str):
     response = open_ai_client.embeddings.create(model=model, input=question)
-    embedding = response.data[0].embedding
+    embedding = np.array(
+        response.data[0].embedding, dtype=np.float32
+    )  # Convert to NumPy array
 
     return embedding
 
 
-def init_index(open_ai_client: OpenAI, embedding_model: str):
+def init_index(
+    knowledge: List[QuestionAnswer], open_ai_client: OpenAI, embedding_model: str
+):
     print("Initializing index...")
 
-    dimension = 384  # Match the embedding model output
-    index = faiss.IndexFlatL2(dimension)  # L2 (Euclidean) similarity
-
-    print("Generating FAQ embeddings...")
-
-    # Store embeddings and metadata
     faq_embeddings = np.array(
         [
-            generate_embedding(
-                question=q, open_ai_client=open_ai_client, model=embedding_model
-            )
-            for q, _ in knowledge
+            generate_embedding(qa.question, open_ai_client, embedding_model)
+            for qa in knowledge
         ],
         dtype=np.float32,
     )
 
-    print("Indexing FAQ embeddings...")
+    # Use Nearest Neighbors with cosine similarity
+    index = NearestNeighbors(n_neighbors=1, metric="cosine")
+    index.fit(faq_embeddings)
 
-    index.add(faq_embeddings)
-    faq_answers = {
-        i: knowledge[i][1] for i in range(len(knowledge))
-    }  # Store index-answer mapping
+    faq_answers = {i: knowledge[i].answer for i in range(len(knowledge))}
 
-    return index, faq_answers
+    return index, faq_embeddings, faq_answers
