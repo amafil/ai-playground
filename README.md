@@ -1,8 +1,8 @@
-# helpdesk-rag-playground
+# rag-playground
 
 ## Overview
 
-The `helpdesk-rag-playground` is a Python-based project designed to provide a helpdesk solution using Retrieval-Augmented Generation (RAG). It integrates OpenAI's APIs for natural language processing and FAISS for efficient similarity-based retrieval. The system processes user queries, classifies them, and provides answers based on a predefined FAQ knowledge base.
+The `rag-playground` is a Python-based project designed to provide a helpdesk solution using Retrieval-Augmented Generation (RAG). It integrates OpenAI's APIs for natural language processing and FAISS for efficient similarity-based retrieval. The system processes user queries, classifies them, and provides answers based on a predefined FAQ knowledge base.
 
 ---
 
