@@ -3,3 +3,4 @@ numpy
 yake
 scikit-learn
 pyodbc
+faiss-cpu

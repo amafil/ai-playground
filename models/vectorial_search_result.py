@@ -1,10 +1,8 @@
-from typing import List
-
 class VectorialSearchResult:
-    def __init__(self, score: float, index: int, answers: List[str]):
+    def __init__(self, score: float, index: int, answer: str):
         self.score = score
         self.index = index
-        self.answers = answers
+        self.answer = answer
 
     def __str__(self):
-        return f"Score: {self.score} Index: {self.index}, Answer: {self.answers}"
+        return f"Score: {self.score} Index: {self.index}, Answer: {self.answer}"

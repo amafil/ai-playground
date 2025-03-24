@@ -1,7 +1,16 @@
+from typing import List
 from openai import OpenAI
 
+from models.vectorial_search_result import VectorialSearchResult
 
-def chat_completion(message: str, knowledge: str, open_ai_client: OpenAI, model: str):
+
+def chat_completion(
+    message: str,
+    knowledge: List[VectorialSearchResult],
+    open_ai_client: OpenAI,
+    model: str,
+):
+    llm_knowledge = "\n".join([f"```{result.answer}```" for result in knowledge])
     chat = [
         {
             "role": "system",
@@ -10,7 +19,7 @@ def chat_completion(message: str, knowledge: str, open_ai_client: OpenAI, model:
                 " Always respond in Italian. If a user writes in English, inform them that you can only respond in Italian."
                 " Your responses must be strictly based on the provided FAQ data."
                 " If the question is not covered in the FAQ fata, respond with:"
-                " *\"I'm sorry, but I don't have an answer.*."
+                " *\"I'm sorry, but I don't have an answer.\"*."
                 " Important guidelines:"
                 " 1. **Use a polite and clear tone**."
                 " 2. **Do not generate responses or add information that is not in the FAQ**."
@@ -21,7 +30,7 @@ def chat_completion(message: str, knowledge: str, open_ai_client: OpenAI, model:
         },
         {
             "role": "user",
-            "content": f"The following is the available FAQ data:\n\n{knowledge}\n\n"
+            "content": f"The following is the available FAQ data:\n\n{llm_knowledge}\n\n"
             "Use only this information to answer user queries.",
         },
         {
