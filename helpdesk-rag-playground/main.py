@@ -1,6 +1,5 @@
 import os
 from typing import List
-import faiss
 from openai import OpenAI
 from sklearn.neighbors import NearestNeighbors
 from models.cosine_similarity_index import CosineSimilarityIndex
