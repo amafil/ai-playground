@@ -8,11 +8,12 @@ The `helpdesk-rag-playground` is a Python-based project designed to provide a he
 
 ## Features
 
-- **FAQ Embedding and Retrieval**: Uses FAISS to index and retrieve FAQ answers based on similarity to user queries.
+- **FAQ Embedding and Retrieval**: Uses FAISS and scikit-learn to index and retrieve FAQ answers based on similarity to user queries.
+- **Cosine and Euclidean Similarity**: Supports both cosine and Euclidean similarity for vectorial search.
 - **Message Classification**: Classifies incoming messages into predefined categories (e.g., assistance, error, information).
 - **Keyword Extraction**: Extracts relevant keywords from user messages using YAKE or OpenAI's models.
 - **Chat Completion**: Generates responses to user queries using OpenAI's chat completion API.
-- **Helpdesk Message Handling**: Processes messages retrieved from a helpdesk channel.
+- **Helpdesk Message Handling**: Processes messages retrieved from a mock helpdesk channel.
 
 ---
 
@@ -21,17 +22,17 @@ The `helpdesk-rag-playground` is a Python-based project designed to provide a he
 ### 1. `main.py`
 
 The main entry point of the application. It orchestrates the following:
-- Initializes the OpenAI client and FAISS index.
-- Retrieves helpdesk messages.
+- Initializes the OpenAI client and similarity indices (cosine and Euclidean).
+- Retrieves helpdesk messages using the `mock_helpdesk_messages` function.
 - Classifies messages and extracts keywords.
-- Searches for answers in the FAQ knowledge base.
+- Searches for answers in the FAQ knowledge base using both cosine and Euclidean similarity.
 - Generates responses using OpenAI's chat completion API.
 
 ### 2. `core/`
 
 This directory contains core functionalities of the project:
-- **`embeddings.py`**: Handles embedding generation and FAISS index initialization.
-- **`knowledge.py`**: Contains the FAQ knowledge base as a list of question-answer tuples.
+- **`embeddings.py`**: Handles embedding generation and initialization of similarity indices.
+- **`knowledge.py`**: Loads FAQ knowledge from files or databases.
 - **`classification.py`**: Provides message classification and keyword extraction functionalities.
 - **`utils.py`**: Includes utility functions, such as a mock function to retrieve helpdesk messages.
 
@@ -39,17 +40,27 @@ This directory contains core functionalities of the project:
 
 This directory contains service-level functionalities:
 - **`chat.py`**: Implements chat completion using OpenAI's API.
-- **`search.py`**: Implements vectorial search for FAQ answers using FAISS.
+- **`search.py`**: Implements vectorial search for FAQ answers using cosine and Euclidean similarity.
 
-### 4. `requirements.txt`
+### 4. `models/`
+
+This directory contains data models used in the project:
+- **`knowledge.py`**: Represents a question-answer pair.
+- **`vectorial_search_result.py`**: Represents the result of a vectorial search.
+- **`cosine_similarity_index.py`**: Represents the cosine similarity index.
+- **`euclidean_similarity_index.py`**: Represents the Euclidean similarity index.
+
+### 5. `requirements.txt`
 
 Lists the dependencies required for the project:
 - `openai`: For interacting with OpenAI's APIs.
 - `numpy`: For numerical computations.
 - `faiss-cpu`: For similarity-based retrieval.
+- `scikit-learn`: For cosine similarity.
 - `yake`: For keyword extraction.
+- `pyodbc`: For database connectivity.
 
-### 5. `LICENSE`
+### 6. `LICENSE`
 
 The project is licensed under the GNU General Public License v3.0.
 
@@ -90,36 +101,32 @@ The project is licensed under the GNU General Public License v3.0.
 3. The script will:
    - Retrieve helpdesk messages.
    - Classify and process each message.
-   - Search for relevant answers in the FAQ knowledge base.
+   - Search for relevant answers in the FAQ knowledge base using cosine and Euclidean similarity.
    - Generate and print responses.
 
 ---
 
 ## FAQ Knowledge Base
 
-The FAQ knowledge base is defined in `core/knowledge.py` as a list of tuples. Each tuple contains:
-- A question (string).
-- A corresponding answer (string).
+The FAQ knowledge base is loaded from text files in the `data/QA` directory. Each file contains:
+- A question (separated from the answer by a double newline).
+- A corresponding answer.
 
 Example:
-```python
-knowledge = [
-    (
-        "Where can I download the app?",
-        "You can download it from the official stores..."
-    ),
-    ...
-]
+```txt
+question
+
+answer
 ```
 
 ---
 
 ## Key Components
 
-### FAISS Index
+### Cosine and Euclidean Similarity
 
-- Used for efficient similarity-based retrieval of FAQ answers.
-- Initialized in `core/embeddings.py` with a dimension matching the embedding model output.
+- **Cosine Similarity**: Uses scikit-learn's `NearestNeighbors` for similarity-based retrieval.
+- **Euclidean Similarity**: Uses FAISS for efficient L2 distance-based retrieval.
 
 ### OpenAI Integration
 
@@ -142,6 +149,7 @@ knowledge = [
   - Message classification.
   - Keyword extraction.
   - Chat completion requests and responses.
+  - Similarity search results.
 
 ---
 
